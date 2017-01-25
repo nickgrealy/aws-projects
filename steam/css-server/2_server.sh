@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # As the Steam user...
 
 # variables
@@ -28,7 +30,8 @@ cat "$cfg_file"
 mkdir -p "$steam_sdk32"
 ln -s "$install_dir/bin/steamclient.so" "$steam_sdk32/steamclient.so"
 
-# TODO: Notify server starting...
+# Notify server starting...
+curl -X POST --data-urlencode 'payload={"channel": "#counterstrikesource", "username": "aws-server", "text": "A new server is starting up... :27015", "icon_emoji": ":ghost:"}' https://hooks.slack.com/services/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
 
 # Start CSS Server...
 "$install_dir/srcds_run" -console -game cstrike +map de_dust -maxplayers 16
