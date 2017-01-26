@@ -3,38 +3,33 @@
 # As the Steam user...
 
 # variables
-export install_dir=/home/steam/css_server
-export steamcmd_home=/home/steam/steamcmd
-export server_cfg=https://raw.githubusercontent.com/nickgrealy/aws-projects/master/steam/css-server/config/server.cfg
-export steamcmd_tar=https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
-export steam_sdk32=/home/steam/.steam/sdk32
-export cfg_file="$install_dir/cstrike/cfg/server.cfg"
+export INSTALL_DIR=/home/steam/css_server
+export STEAMCMD_DIR=/home/steam/steamcmd
+export SERVER_CFG_URL=https://raw.githubusercontent.com/nickgrealy/aws-projects/master/steam/css-server/config/server.cfg
+export STEAMCMD_TAR_URL=https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+export STEAM_SDK32_DIR=/home/steam/.steam/sdk32
+export CFG_DIR="$INSTALL_DIR/cstrike/cfg"
 
-# aliases
-alias inst='cd $install_dir'
-alias cfg='cd $install_dir/cstrike/cfg'
-alias steam='cd $steamcmd_home'
-
-mkdir "$steamcmd_home" && cd "$steamcmd_home"
-curl -sqL "$steamcmd_tar" | tar zxvf -
+mkdir "$STEAMCMD_DIR" && cd "$STEAMCMD_DIR"
+curl -sqL "$STEAMCMD_TAR_URL" | tar zxvf -
 
 # Install CSS Server...
-"$steamcmd_home/steamcmd.sh" +login anonymous +force_install_dir "$install_dir" +app_update 232330 validate +quit
+"$STEAMCMD_DIR/steamcmd.sh" +login anonymous +force_install_dir "$INSTALL_DIR" +app_update 232330 validate +quit
 
-# Replace SERVER_PASSWORD in server.cfg file...
-curl $server_cfg -o "$cfg_file"
-sed -i s/SERVER_PASSWORD/$SERVER_PASSWORD/g "$cfg_file"
-cat "$cfg_file"
+# Replace GAME_SERVER_PASSWORD in server.cfg file...
+curl $SERVER_CFG_URL -o "$CFG_DIR/server.cfg"
+sed -i s/GAME_SERVER_PASSWORD/$GAME_SERVER_PASSWORD/g "$CFG_DIR/server.cfg"
 
-# TODO Randomize map file?
+# Randomize map file
+shuf "$CFG_DIR/mapcycle_default.txt" --output="$CFG_DIR/mapcycle.txt"
 
 # Hack to fix missing .so file...
-mkdir -p "$steam_sdk32"
-ln -s "$install_dir/bin/steamclient.so" "$steam_sdk32/steamclient.so"
+mkdir -p "$STEAM_SDK32_DIR"
+ln -s "$INSTALL_DIR/bin/steamclient.so" "$STEAM_SDK32_DIR/steamclient.so"
 
 # Notify server starting...
 EXT_SERVER_NAME="$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)"
-curl -X POST --data-urlencode "payload={\"channel\": \"#counterstrikesource\", \"username\": \"aws-server\", \"text\": \"A new server is starting up... $EXT_SERVER_NAME:27015\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
+curl -X POST --data-urlencode "payload={\"channel\": \"#counterstrikesource\", \"username\": \"aws-server\", \"text\": \"A new server is starting up... server: `$EXT_SERVER_NAME:27015` - password: `$GAME_SERVER_PASSWORD`\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
 
 # Start CSS Server...
-"$install_dir/srcds_run" -console -game cstrike +map de_dust -maxplayers 16
+"$INSTALL_DIR/srcds_run" -console -game cstrike +map de_dust -maxplayers 16

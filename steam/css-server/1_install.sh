@@ -13,6 +13,4 @@ sudo useradd -m steam
 sudo chown steam:steam /home/steam
 curl https://raw.githubusercontent.com/nickgrealy/aws-projects/master/steam/css-server/2_server.sh -o /tmp/2_server.sh
 chmod 777 /tmp/2_server.sh
-sudo su - steam -c 'export SERVER_PASSWORD=test123; /tmp/2_server.sh' &
-
-# TODO Externally configure SERVER_PASSWORD
+sudo su - steam -c "export GAME_SERVER_PASSWORD=$GAME_SERVER_PASSWORD; /tmp/2_server.sh" &

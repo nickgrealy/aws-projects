@@ -12,6 +12,13 @@
             "Type": "AWS::EC2::KeyPair::KeyName",
             "ConstraintDescription": "must be the name of an existing EC2 KeyPair."
         },
+        "GAME_SERVER_PASSWORD": {
+            "NoEcho": "true",
+            "Description": "Password for the Game Server",
+            "Type": "String",
+            "MinLength": "1",
+            "MaxLength": "41"
+        },
         "InstanceType": {
             "Description": "WebServer EC2 instance type",
             "Type": "String",
@@ -112,6 +119,7 @@
                             "#!/bin/bash -xe\n",
                             "curl https://raw.githubusercontent.com/nickgrealy/aws-projects/master/steam/css-server/1_install.sh -o /tmp/1_install.sh\n",
                             "chmod 777 /tmp/1_install.sh\n",
+                            "export GAME_SERVER_PASSWORD=", { "Ref": "GAME_SERVER_PASSWORD" },
                             "/tmp/1_install.sh\n"
                         ]]
                     }
