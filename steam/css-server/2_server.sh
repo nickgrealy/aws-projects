@@ -26,12 +26,15 @@ curl $server_cfg -o "$cfg_file"
 sed -i s/SERVER_PASSWORD/$SERVER_PASSWORD/g "$cfg_file"
 cat "$cfg_file"
 
+# TODO Randomize map file?
+
 # Hack to fix missing .so file...
 mkdir -p "$steam_sdk32"
 ln -s "$install_dir/bin/steamclient.so" "$steam_sdk32/steamclient.so"
 
 # Notify server starting...
-curl -X POST --data-urlencode 'payload={"channel": "#counterstrikesource", "username": "aws-server", "text": "A new server is starting up... :27015", "icon_emoji": ":ghost:"}' https://hooks.slack.com/services/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
+EXT_SERVER_NAME="$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)"
+curl -X POST --data-urlencode "payload={\"channel\": \"#counterstrikesource\", \"username\": \"aws-server\", \"text\": \"A new server is starting up... $EXT_SERVER_NAME:27015\", \"icon_emoji\": \":ghost:\"}" https://hooks.slack.com/services/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
 
 # Start CSS Server...
 "$install_dir/srcds_run" -console -game cstrike +map de_dust -maxplayers 16
