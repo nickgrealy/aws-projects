@@ -15,7 +15,7 @@ mkdir "$STEAMCMD_DIR" && cd "$STEAMCMD_DIR"
 curl -sqL "$STEAMCMD_TAR_URL" | tar zxvf -
 
 # Install CSS Server...
-curl -X POST --data-urlencode "payload={\"channel\": \"#counterstrikesource\", \"username\": \"aws-server\", \"text\": \"*Step 1/2* - Installing server...\", \"icon_emoji\": \":hourglass_flowing_sand:\"}" $MSG_SERVER
+curl -X POST --data-urlencode "payload={\"channel\": \"#counterstrikesource\", \"username\": \"aws-server\", \"text\": \"*Step 1/2* - Installing server...\", \"icon_emoji\": \":white_check_mark:\"}" $MSG_SERVER
 "$STEAMCMD_DIR/steamcmd.sh" +login anonymous +force_install_dir "$INSTALL_DIR" +app_update 232330 validate +quit
 
 # Replace GAME_SERVER_PASSWORD in server.cfg file...
@@ -31,9 +31,10 @@ ln -s "$INSTALL_DIR/bin/steamclient.so" "$STEAM_SDK32_DIR/steamclient.so"
 
 # Notify server starting...
 EXT_SERVER_NAME="$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)"
-curl -X POST --data-urlencode "payload={\"channel\": \"#counterstrikesource\", \"username\": \"aws-server\", \"text\": \"*Step 2/2* - Starting server... server: `$EXT_SERVER_NAME:27015` - password: `$GAME_SERVER_PASSWORD`\", \"icon_emoji\": \":white_check_mark:\"}" $MSG_SERVER
+curl -X POST --data-urlencode "payload={\"channel\": \"#counterstrikesource\", \"username\": \"aws-server\", \"text\": \"*Step 2/2* - Starting server... \n*Server:* \`$EXT_SERVER_NAME:27015\` \n*Password:* \`$GAME_SERVER_PASSWORD\`\", \"icon_emoji\": \":white_check_mark:\"}" $MSG_SERVER
 
 # Start CSS Server...
 "$INSTALL_DIR/srcds_run" -console -game cstrike +map de_dust -maxplayers 16
 
+# TODO Make MSG_SERVER a parameter?
 # TODO Automatically DELETE Cloud after 24 hours?
