@@ -1,12 +1,14 @@
 #!/bin/bash
 
+# Requires 8GB Disk Space
+
 # As the sudo user...
 
 # cleanup used space (optional)
-sudo yum -y remove mysql-server mysql java aws-apitools-common aws-amitools-ec2 aws-cfn-bootstrapl
-sudo yum update -y
+#sudo yum -y remove mysql-server mysql java aws-apitools-common aws-amitools-ec2 aws-cfn-bootstrapl
+#sudo yum update -y
 sudo yum install glibc.i686 libstdc++.i686 ncurses-libs.i686 -y
-sudo rm -Rf /var/cache/yum/x86_64/latest
+#sudo rm -Rf /var/cache/yum/x86_64/latest
 
 # setup steam...
 sudo useradd -m steam
