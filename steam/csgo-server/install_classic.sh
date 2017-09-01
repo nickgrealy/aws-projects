@@ -6,6 +6,8 @@
 #
 # To get a game key: http://steamcommunity.com/dev/managegameservers -> 730
 #
+# This file exists here: https://raw.githubusercontent.com/nickgrealy/aws-projects/master/steam/csgo-server/install_classic.sh
+#
 
 # setup env
 export STEAMCMD_TAR_URL=https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
@@ -28,6 +30,7 @@ curl -sqL ""$STEAMCMD_TAR_URL"" | tar zxvf -
 "$STEAMCMD_DIR/steamcmd.sh" +login anonymous +force_install_dir "$INSTALL_DIR" +app_update 740 validate +quit
 
 # configure
+mkdir -p "$CFG_DIR"
 curl https://raw.githubusercontent.com/nickgrealy/aws-projects/master/steam/csgo-server/classic/gamemodes_server.txt -o "$GAME_DIR/gamemodes_server.txt"
 curl https://raw.githubusercontent.com/nickgrealy/aws-projects/master/steam/csgo-server/classic/autoexec.cfg -o "$CFG_DIR/autoexec.cfg"
 curl https://raw.githubusercontent.com/nickgrealy/aws-projects/master/steam/csgo-server/classic/server.cfg -o "$CFG_DIR/server.cfg"
