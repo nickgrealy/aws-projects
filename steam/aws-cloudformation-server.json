@@ -5,16 +5,19 @@
         "AvailabilityZone": {
             "Description": "Server Availability Zone",
             "Type": "AWS::EC2::AvailabilityZone::Name",
-            "ConstraintDescription": "must be the name of an availability zone."
+            "ConstraintDescription": "must be the name of an availability zone.",
+            "Default": "ap-southeast-2a"
         },
         "KeyName": {
             "Description": "Name of an existing EC2 KeyPair to enable SSH access to the web server",
             "Type": "AWS::EC2::KeyPair::KeyName",
-            "ConstraintDescription": "must be the name of an existing EC2 KeyPair."
+            "ConstraintDescription": "must be the name of an existing EC2 KeyPair.",
+            "Default": "aws.nickgrealy"
         },
         "InitialisationScript": {
             "Description": "The shell script to execute",
             "Type": "String",
+            "Default": "https://raw.githubusercontent.com/nickgrealy/aws-projects/master/steam/csgo-server/install_classic.sh",
             "MinLength": "1",
             "MaxLength": "999"
         },
@@ -31,12 +34,6 @@
             "Type": "String",
             "MinLength": "1",
             "MaxLength": "999"
-        },
-        "HDDSize": {
-            "Description": "Size of the Harddrive",
-            "Type": "Number",
-            "MinValue": 8,
-            "MaxValue": 40
         },
         "InstanceType": {
             "Description": "WebServer EC2 instance type",
@@ -95,6 +92,7 @@
                     "Fn::Base64": {
                         "Fn::Join": ["", [
                             "#!/bin/bash -xe\n",
+                            "exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1\n",
                             "curl ", { "Ref": "InitialisationScript" }, " -o /tmp/install.sh\n",
                             "chmod 777 /tmp/install.sh\n",
                             "export GAME_SERVER_PASSWORD=", { "Ref": "GameServerPassword" }, "\n",
